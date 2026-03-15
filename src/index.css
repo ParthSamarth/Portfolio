@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  /* Backgrounds */
+  --bg: #080808;
+  --bg-card: #0e0e0e;
+  --bg-elevated: #141414;
+  --bg-terminal: #0d1117;
+  --bg-glass: rgba(14, 14, 14, 0.7);
+
+  /* Gold Palette */
+  --gold: #c9a84c;
+  --gold-bright: #e8c96a;
+  --gold-light: #f5dfa0;
+  --gold-dim: #6b5520;
+  --gold-trace: rgba(201, 168, 76, 0.08);
+  --gold-glow: rgba(201, 168, 76, 0.15);
+  --gold-border: rgba(201, 168, 76, 0.22);
+  --gold-border-hot: rgba(201, 168, 76, 0.6);
+
+  /* Text */
+  --text: #ede8d8;
+  --text-secondary: #b8b09a;
+  --text-muted: #5c574e;
+  --text-code: #98d4a3;
+
+  /* Accent */
+  --accent-blue: #4fc3f7;
+  --accent-red: #e57373;
+
+  /* Typography */
+  --font-display: 'Orbitron', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-label: 'Rajdhani', sans-serif;
+  --font-body: 'Crimson Pro', serif;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-base: 300ms;
+  --duration-slow: 600ms;
+
+  /* Depth */
+  --shadow-gold: 0 0 30px rgba(201, 168, 76, 0.12),
+    0 0 60px rgba(201, 168, 76, 0.06);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --radius-sm: 3px;
+  --radius-md: 6px;
+  --radius-lg: 12px;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background-color: var(--bg);
+  background-image: radial-gradient(
+    circle,
+    rgba(201, 168, 76, 0.055) 1px,
+    transparent 1px
+  );
+  background-size: 30px 30px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ─── Selection ─── */
+::selection { background: rgba(201,168,76,0.25); color: var(--text); }
+
+/* ─── Focus ring ─── */
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 2px; }
+
+/* ─── Links ─── */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast), border-color var(--duration-fast);
+}
+
+/* ─── Buttons ─── */
+button {
+  font-family: var(--font-label);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color var(--duration-fast), background var(--duration-fast),
+    border-color var(--duration-fast), box-shadow var(--duration-fast), transform var(--duration-fast);
+}
+
+/* ─── Section anchor spacing ─── */
+.section-anchor {
+  scroll-margin-top: 80px;
+}
+
+/* ─── Data stream background ─── */
+@keyframes data-stream {
+  0%   { transform: translateX(-200px); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(100vw); opacity: 0; }
+}
+
+.data-stream {
+  position: fixed;
+  left: 0;
+  width: 200px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.08), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+.stream-1 { top: 30%; animation: data-stream 10s linear infinite; }
+.stream-2 { top: 55%; animation: data-stream 14s linear 4s infinite; }
+.stream-3 { top: 75%; animation: data-stream 18s linear 8s infinite; }
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
