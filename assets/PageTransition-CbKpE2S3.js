@@ -1,1 +1,0 @@
-import{a as e,p as t}from"./mail-ChI8slTY.js";var n=t(),r={initial:{opacity:0,y:8},enter:{opacity:1,y:0,transition:{duration:.4,ease:[.16,1,.3,1]}},exit:{opacity:0,y:-8,transition:{duration:.2,ease:[.4,0,.2,1]}}};function i({children:t}){return(0,n.jsx)(e.div,{variants:r,initial:`initial`,animate:`enter`,exit:`exit`,style:{width:`100%`},children:t})}export{i as t};
