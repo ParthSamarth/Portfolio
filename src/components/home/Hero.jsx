@@ -37,8 +37,19 @@ const Hero = React.memo(function Hero() {
       scrollMarginTop: '80px',
     }}>
       <div style={{ display: 'flex', width: '100%', gap: '2rem', alignItems: 'center' }} className="hero-row">
-        {/* LEFT COLUMN */}
         <div style={{ flex: '0 0 55%' }} className="hero-left">
+          {/* Availability Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            className="badge-available"
+            style={{ marginBottom: '1.5rem' }}
+          >
+            <span className="dot" />
+            Open to Internships &amp; Research Collaborations
+          </motion.div>
+
           {/* Terminal label */}
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
@@ -152,6 +163,35 @@ const Hero = React.memo(function Hero() {
                 >
                   <Icon size={16} /> {text}
                 </a>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Trust Bar */}
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
+            style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--gold-border)' }}
+          >
+            <span style={{
+              display: 'block', marginBottom: '0.6rem', fontFamily: 'var(--font-mono)',
+              fontSize: '0.62rem', color: 'var(--text-muted)', letterSpacing: '0.2em', textTransform: 'uppercase'
+            }}>
+              Affiliated With
+            </span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem 0', alignItems: 'center' }}>
+              {["CGU Bhubaneswar", "IIT Bombay", "Palo Alto Networks", "IBM", "Coursera"].map((item, i, arr) => (
+                <React.Fragment key={item}>
+                  <span
+                    style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-muted)', transition: 'color 150ms' }}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--text)'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                  >
+                    {item}
+                  </span>
+                  {i < arr.length - 1 && (
+                    <span style={{ color: 'var(--gold-dim)', margin: '0 0.5rem', fontSize: '0.72rem' }}>·</span>
+                  )}
+                </React.Fragment>
               ))}
             </div>
           </motion.div>

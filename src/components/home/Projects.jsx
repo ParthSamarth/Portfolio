@@ -123,45 +123,71 @@ function ProjectCard({ project, index }) {
       viewport={{ once: true }}
       style={{
         background: 'var(--bg-card)', border: '1px solid var(--gold-border)', borderRadius: '8px',
-        padding: '2rem', position: 'relative', overflow: 'hidden',
+        padding: '1.5rem', position: 'relative', overflow: 'hidden',
+        display: 'flex', flexDirection: 'column',
         transition: 'transform 250ms, border-color 250ms, box-shadow 250ms', cursor: 'default',
       }}
       whileHover={{ y: -4, borderColor: 'rgba(201,168,76,0.6)', boxShadow: '0 0 30px rgba(201,168,76,0.12)' }}
     >
-      <div style={{ position: 'absolute', top: '0.5rem', right: '1rem', fontFamily: 'var(--font-display)', fontSize: '5rem', color: 'var(--gold-trace)', lineHeight: 1, pointerEvents: 'none' }}>
-        {project.id}
-      </div>
-
+      {/* Category badge — absolute top-right */}
       {project.category && (
-        <div style={{ display: 'inline-block', border: '1px solid var(--gold)', color: 'var(--gold)', fontFamily: 'var(--font-label)', fontSize: '0.7rem', padding: '2px 10px', borderRadius: '12px', marginBottom: '0.75rem' }}>
+        <div style={{
+          position: 'absolute', top: '1rem', right: '1rem',
+          border: '1px solid var(--gold)', color: 'var(--gold)',
+          fontFamily: 'var(--font-label)', fontSize: '0.7rem',
+          padding: '2px 10px', borderRadius: '12px',
+        }}>
           {project.category}
         </div>
       )}
 
-      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--text)', margin: '0 0 0.25rem' }}>{project.name}</h3>
-      <p style={{ fontFamily: 'var(--font-label)', fontSize: '0.9rem', color: 'var(--gold)', margin: '0 0 0.75rem' }}>{project.subtitle}</p>
-
-      <div style={{ background: 'var(--gold-trace)', borderLeft: '3px solid var(--gold)', padding: '0.5rem 0.75rem', borderRadius: '0 4px 4px 0', marginBottom: '0.75rem' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text)' }}>{project.highlight}</span>
-      </div>
-
-      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.92rem', color: 'var(--text-muted)', lineHeight: 1.65, margin: '0 0 1rem' }}>{project.description}</p>
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1rem' }}>
+      {/* Stack tags — TOP */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.85rem' }}>
         {project.stack.map(s => (
-          <span key={s} style={{ background: 'var(--bg-elevated)', border: '1px solid var(--gold-border)', borderRadius: '3px', padding: '2px 8px', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-muted)' }}>{s}</span>
+          <span key={s} style={{
+            background: 'var(--gold-trace)', border: '1px solid var(--gold-border)',
+            borderRadius: 'var(--radius-xs)', padding: '3px 9px',
+            fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
+            color: 'var(--gold-mid)', textTransform: 'uppercase', letterSpacing: '0.06em',
+          }}>{s}</span>
         ))}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Title */}
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--text)', margin: '0 0 0.25rem' }}>{project.name}</h3>
+
+      {/* Subtitle */}
+      <p style={{ fontFamily: 'var(--font-label)', fontSize: '0.9rem', color: 'var(--gold)', margin: '0 0 0.75rem' }}>{project.subtitle}</p>
+
+      {/* Description */}
+      <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.92rem', color: 'var(--text-muted)', lineHeight: 1.65, margin: 0 }}>{project.description}</p>
+
+      {/* Highlight line */}
+      {project.highlight && (
+        <div style={{ marginTop: '0.6rem', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--text-code)', fontStyle: 'italic' }}>
+          <span style={{ color: 'var(--gold-mid)' }}>→ </span>{project.highlight}
+        </div>
+      )}
+
+      {/* GitHub link — pushed to bottom */}
+      <div style={{ marginTop: 'auto', paddingTop: '1.25rem' }}>
         {project.github ? (
           <a href={project.github} target="_blank" rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--gold)', textDecoration: 'none' }}
-          ><Github size={13} /> VIEW REPO</a>
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '5px',
+              fontFamily: 'var(--font-mono)', fontSize: '0.78rem',
+              color: 'var(--gold-mid)', textDecoration: 'none',
+              background: 'none', border: 'none', padding: 0,
+              transition: 'color 150ms',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--gold-bright)'; e.currentTarget.style.textDecoration = 'underline' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--gold-mid)'; e.currentTarget.style.textDecoration = 'none' }}
+          >
+            <ExternalLink size={14} /> VIEW ON GITHUB →
+          </a>
         ) : (
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-muted)' }}>[ PRIVATE REPO ]</span>
         )}
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>{project.category}</span>
       </div>
     </motion.div>
   )
