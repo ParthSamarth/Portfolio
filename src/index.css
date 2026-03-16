@@ -1,32 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Rajdhani:wght@400;500;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap');
 
 :root {
-  /* Backgrounds */
-  --bg: #080808;
-  --bg-card: #0e0e0e;
-  --bg-elevated: #141414;
-  --bg-terminal: #0d1117;
-  --bg-glass: rgba(14, 14, 14, 0.7);
+  /* Backgrounds — deeper, richer blacks */
+  --bg: #060606;
+  --bg-card: #0a0a0a;
+  --bg-elevated: #111111;
+  --bg-terminal: #080d12;
+  --bg-glass: rgba(10, 10, 10, 0.75);
+  --black-base: #030303;
 
-  /* Gold Palette */
-  --gold: #c9a84c;
-  --gold-bright: #e8c96a;
-  --gold-light: #f5dfa0;
-  --gold-dim: #6b5520;
-  --gold-trace: rgba(201, 168, 76, 0.08);
-  --gold-glow: rgba(201, 168, 76, 0.15);
-  --gold-border: rgba(201, 168, 76, 0.22);
-  --gold-border-hot: rgba(201, 168, 76, 0.6);
+  /* Gold Palette — higher saturation, more luminance range */
+  --gold: #d4af37;
+  --gold-bright: #f0ce54;
+  --gold-light: #fae49e;
+  --gold-mid: #c19b2e;
+  --gold-dim: #7a5c1f;
+  --gold-trace: rgba(212, 175, 55, 0.07);
+  --gold-glow: rgba(212, 175, 55, 0.18);
+  --gold-border: rgba(212, 175, 55, 0.18);
+  --gold-border-hot: rgba(212, 175, 55, 0.55);
 
-  /* Text */
-  --text: #ede8d8;
-  --text-secondary: #b8b09a;
-  --text-muted: #5c574e;
-  --text-code: #98d4a3;
+  /* Text — more contrast against dark backgrounds */
+  --text: #f2ece0;
+  --text-secondary: #c4bca6;
+  --text-muted: #6a6458;
+  --text-code: #7ee8a2;
 
-  /* Accent */
-  --accent-blue: #4fc3f7;
-  --accent-red: #e57373;
+  /* Accent — punchier */
+  --accent-blue: #56d4ff;
+  --accent-red: #f07070;
 
   /* Typography */
   --font-display: 'Orbitron', sans-serif;
@@ -41,11 +43,12 @@
   --duration-base: 300ms;
   --duration-slow: 600ms;
 
-  /* Depth */
-  --shadow-gold: 0 0 30px rgba(201, 168, 76, 0.12),
-    0 0 60px rgba(201, 168, 76, 0.06);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.6);
-  --radius-sm: 3px;
+  /* Depth — stronger glow, bolder shadows */
+  --shadow-gold: 0 0 30px rgba(212, 175, 55, 0.18),
+    0 0 60px rgba(212, 175, 55, 0.08);
+  --shadow-card: 0 6px 32px rgba(0, 0, 0, 0.7);
+  --radius-xs: 3px;
+  --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 12px;
 
@@ -76,10 +79,10 @@ body {
   background-color: var(--bg);
   background-image: radial-gradient(
     circle,
-    rgba(201, 168, 76, 0.055) 1px,
+    rgba(212, 175, 55, 0.045) 1px,
     transparent 1px
   );
-  background-size: 30px 30px;
+  background-size: 28px 28px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -90,7 +93,7 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.035;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
@@ -105,7 +108,7 @@ body::before {
 ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 /* ─── Selection ─── */
-::selection { background: rgba(201,168,76,0.25); color: var(--text); }
+::selection { background: rgba(212,175,55,0.3); color: var(--text); }
 
 /* ─── Focus ring ─── */
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 2px; }
@@ -145,7 +148,7 @@ button {
   left: 0;
   width: 200px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.08), transparent);
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
   pointer-events: none;
   z-index: 0;
 }
