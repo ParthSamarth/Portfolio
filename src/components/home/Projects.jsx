@@ -51,6 +51,7 @@ function FeaturedProject({ project }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+      className="glass-panel"
       style={{
         border: '1px solid var(--gold-border)', borderRadius: '8px', padding: '2.5rem',
         background: 'var(--bg-elevated)',
@@ -121,6 +122,7 @@ function ProjectCard({ project, index }) {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.5 }}
       viewport={{ once: true }}
+      className="glass-panel"
       style={{
         background: 'var(--bg-card)', border: '1px solid var(--gold-border)', borderRadius: '8px',
         padding: '1.5rem', position: 'relative', overflow: 'hidden',
@@ -195,7 +197,7 @@ function ProjectCard({ project, index }) {
 
 const Projects = React.memo(function Projects() {
   return (
-    <section id="work" style={{ padding: 'clamp(4rem,8vw,6rem) clamp(1.5rem,5vw,4rem)', background: 'var(--bg-card)', scrollMarginTop: '80px' }}>
+    <section id="work" style={{ padding: 'clamp(4rem,8vw,6rem) clamp(1.5rem,5vw,4rem)', scrollMarginTop: '80px' }}>
       <motion.div initial={{ opacity:0,y:20 }} whileInView={{ opacity:1,y:0 }} viewport={{ once:true }} style={{ fontFamily:'var(--font-label)',fontSize:'0.8rem',color:'var(--gold)',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:'0.5rem' }}>
         // WORK
       </motion.div>

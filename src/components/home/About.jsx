@@ -34,6 +34,7 @@ function StatCard({ title, children, delay = 0 }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5 }} viewport={{ once: true }}
+      className="glass-panel"
       style={{
         background: 'var(--bg-card)', border: '1px solid var(--gold-border)',
         borderRadius: '8px', padding: '1.25rem',
@@ -81,7 +82,7 @@ const About = React.memo(function About() {
         {/* LEFT */}
         <div style={{ flex:'1 1 400px', minWidth:'300px' }}>
           {/* Terminal */}
-          <div style={{ background:'var(--bg-terminal)', border:'1px solid var(--gold-border)', borderRadius:'8px', overflow:'hidden' }}>
+          <div className="glass-heavy" style={{ background:'var(--bg-terminal)', border:'1px solid var(--gold-border)', borderRadius:'8px', overflow:'hidden' }}>
             <div style={{ background:'#1a1a1a', padding:'10px 16px', display:'flex', gap:'8px', alignItems:'center' }}>
               {['#FF5F57','#FFBD2E','#28CA41'].map(c => <div key={c} style={{ width:'6px',height:'6px',borderRadius:'50%',background:c }} />)}
               <span style={{ fontFamily:'var(--font-mono)',fontSize:'0.72rem',color:'var(--text-muted)',marginLeft:'8px' }}>

@@ -13,13 +13,15 @@ const ALL_COMMANDS = [
 const WELCOME_LINES = [
   { text: 'PARTH_SAMARTH_OS  v2026.03  [x86_64 · React]', color: 'var(--gold-mid)' },
   { text: '──────────────────────────────────────────────────', color: 'rgba(224,172,16,0.18)' },
-  { text: 'Welcome. Type  ls  to see available commands.', color: 'var(--text-code)' },
+  { text: 'Welcome! Try typing  ls  to view all available commands.', color: 'var(--text-code)' },
+  { text: '→  ls', color: 'var(--gold-mid)' },
   { text: 'Type  man <command>  for detailed usage of any command.', color: 'var(--text-muted)' },
   { text: '', color: '' },
 ]
 
 const RETURNING_LINES = [
-  { text: 'parth@portfolio:~$  (type ls for commands)', color: 'var(--text-muted)' },
+  { text: 'parth@portfolio:~$  Type  ls  to view all available commands.', color: 'var(--text-muted)' },
+  { text: '→  ls', color: 'var(--gold-mid)' },
   { text: '', color: '' },
 ]
 
@@ -290,6 +292,8 @@ export default function TerminalOverlay({ isOpen, onClose }) {
 
   const [input, setInput] = useState('')
   const [outputLines, setOutputLines] = useState(getInitialLines)
+  const [isMinimized, setIsMinimized] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const historyRef = useRef([])
   const historyIndexRef = useRef(-1)
   const outputEndRef = useRef(null)
@@ -298,7 +302,9 @@ export default function TerminalOverlay({ isOpen, onClose }) {
   // Auto-focus input when opened
   useEffect(() => {
     if (isOpen && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 80)
+      // small delay lets the animation start first
+      const t = setTimeout(() => inputRef.current?.focus(), 120)
+      return () => clearTimeout(t)
     }
   }, [isOpen])
 
@@ -469,6 +475,9 @@ export default function TerminalOverlay({ isOpen, onClose }) {
     }
   }
 
+  // Derive terminal height from state
+  const terminalHeight = isMinimized ? '42px' : isFullscreen ? '95vh' : '68vh'
+
   // ── Render ──
   return (
     <AnimatePresence>
@@ -476,7 +485,7 @@ export default function TerminalOverlay({ isOpen, onClose }) {
         <motion.div
           key="terminal-overlay"
           initial={{ y: '100%' }}
-          animate={{ y: 0 }}
+          animate={{ y: 0, height: terminalHeight }}
           exit={{ y: '100%' }}
           transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
           style={{
@@ -484,12 +493,12 @@ export default function TerminalOverlay({ isOpen, onClose }) {
             bottom: 0,
             left: 0,
             right: 0,
-            height: '68vh',
             background: 'rgba(1, 8, 2, 0.97)',
             borderTop: '2px solid var(--gold-mid)',
             zIndex: 500,
             display: 'flex',
             flexDirection: 'column',
+            overflow: 'hidden',
           }}
           className="terminal-overlay-root"
         >
@@ -503,12 +512,48 @@ export default function TerminalOverlay({ isOpen, onClose }) {
             gap: '10px',
             background: 'rgba(0, 0, 0, 0.5)',
             borderBottom: '1px solid rgba(224, 172, 16, 0.12)',
-          }}>
+            cursor: isMinimized ? 'pointer' : 'default',
+          }}
+            onClick={isMinimized ? () => setIsMinimized(false) : undefined}
+          >
             {/* Traffic-light dots */}
             <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexShrink: 0 }}>
-              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#FF5F57', display: 'inline-block' }} />
-              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFBD2E', display: 'inline-block' }} />
-              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28CA41', display: 'inline-block' }} />
+              {/* 🔴 Red — Close */}
+              <span
+                title="Close"
+                onClick={e => { e.stopPropagation(); onClose() }}
+                style={{
+                  width: 10, height: 10, borderRadius: '50%', background: '#FF5F57',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', fontSize: '7px', color: 'transparent', transition: 'color 120ms',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#7a0000')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'transparent')}
+              >✕</span>
+              {/* 🟡 Yellow — Minimize */}
+              <span
+                title="Minimize"
+                onClick={e => { e.stopPropagation(); setIsMinimized(v => !v); setIsFullscreen(false) }}
+                style={{
+                  width: 10, height: 10, borderRadius: '50%', background: '#FFBD2E',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', fontSize: '9px', color: 'transparent', transition: 'color 120ms',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#7a5a00')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'transparent')}
+              >–</span>
+              {/* 🟢 Green — Fullscreen */}
+              <span
+                title={isFullscreen ? 'Restore' : 'Fullscreen'}
+                onClick={e => { e.stopPropagation(); setIsFullscreen(v => !v); setIsMinimized(false) }}
+                style={{
+                  width: 10, height: 10, borderRadius: '50%', background: '#28CA41',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: 'pointer', fontSize: '7px', color: 'transparent', transition: 'color 120ms',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#004d00')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'transparent')}
+              >{isFullscreen ? '⤡' : '⤢'}</span>
             </div>
 
             {/* Title */}
@@ -519,7 +564,7 @@ export default function TerminalOverlay({ isOpen, onClose }) {
               flex: 1,
               textAlign: 'center',
             }}>
-              parth@portfolio — zsh
+              parth@portfolio — zsh{isMinimized ? ' (minimized — click to restore)' : ''}
             </span>
 
             {/* Close button */}
@@ -544,11 +589,15 @@ export default function TerminalOverlay({ isOpen, onClose }) {
           </div>
 
           {/* ── Output Area ── */}
-          <div style={{
-            flex: 1,
-            overflowY: 'auto',
-            padding: '1rem 1.5rem',
-          }}>
+          <div
+            style={{
+              flex: 1,
+              overflowY: 'auto',
+              padding: '1rem 1.5rem',
+              cursor: 'text',
+            }}
+            onClick={() => inputRef.current?.focus()}
+          >
             {outputLines.map((line, i) => (
               <div
                 key={i}
@@ -568,44 +617,56 @@ export default function TerminalOverlay({ isOpen, onClose }) {
           </div>
 
           {/* ── Input Row ── */}
-          <div style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0,
-            padding: '0.65rem 1.5rem',
-            borderTop: '1px solid rgba(224, 172, 16, 0.10)',
-            background: 'rgba(0, 0, 0, 0.3)',
-          }}>
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.85rem',
-              color: 'var(--gold-mid)',
-              whiteSpace: 'nowrap',
+          <div
+            style={{
               flexShrink: 0,
+              borderTop: '1px solid rgba(224, 172, 16, 0.10)',
+              background: 'rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            {/* hint label */}
+            <div style={{
+              padding: '2px 1.5rem 0',
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.62rem',
+              color: 'rgba(224,172,16,0.45)',
+              letterSpacing: '0.06em',
+              animation: 'hint-pulse 2.5s ease-in-out infinite',
             }}>
-              parth@portfolio:~$&nbsp;
-            </span>
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              style={{
-                flex: 1,
-                background: 'transparent',
-                border: 'none',
-                outline: 'none',
+              ✦ type a command below — try &quot;ls&quot; to start
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, padding: '0.45rem 1.5rem 0.65rem' }}>
+              <span style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.85rem',
-                color: 'var(--text-code)',
-                caretColor: 'var(--gold-bright)',
-              }}
-              spellCheck={false}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-            />
+                color: 'var(--gold-mid)',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+              }}>
+                parth@portfolio:~$&nbsp;
+              </span>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder='type &quot;ls&quot; and press Enter…'
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  border: 'none',
+                  outline: 'none',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.85rem',
+                  color: 'var(--text-code)',
+                  caretColor: 'var(--gold-bright)',
+                }}
+                spellCheck={false}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+              />
+            </div>
           </div>
         </motion.div>
       )}
@@ -619,6 +680,14 @@ export default function TerminalOverlay({ isOpen, onClose }) {
           .terminal-overlay-root input {
             font-size: 16px !important;
           }
+        }
+        @keyframes hint-pulse {
+          0%, 100% { opacity: 0.45; }
+          50%       { opacity: 0.9; }
+        }
+        .terminal-overlay-root input::placeholder {
+          color: rgba(224, 172, 16, 0.28);
+          font-style: italic;
         }
       `}</style>
     </AnimatePresence>

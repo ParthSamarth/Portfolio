@@ -226,7 +226,7 @@ const Hero = React.memo(function Hero() {
           {/* Mini metric tiles */}
           <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             {[{ v: '0.031', l: 'MAE' }, { v: '0.047', l: 'RMSE' }, { v: '92%', l: 'ACCURACY' }].map(({ v, l }) => (
-              <div key={l} style={{
+              <div key={l} className="glass-panel" style={{
                 background: 'var(--bg-card)', border: '1px solid var(--gold-border)', borderRadius: '4px', padding: '8px 14px', textAlign: 'center',
               }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.95rem', color: 'var(--gold)' }}>{v}</div>
@@ -237,7 +237,7 @@ const Hero = React.memo(function Hero() {
 
           {/* Floating chips */}
           {floatingChips.map((chip, i) => (
-            <div key={i} style={{
+            <div key={i} className="glass-panel" style={{
               position: 'absolute',
               top: chip.top, bottom: chip.bottom, left: chip.left, right: chip.right,
               background: 'var(--bg-elevated)', border: '1px solid var(--gold-border)',

@@ -1,9 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import emailjs from '@emailjs/browser'
 import { motion } from 'framer-motion'
 import { Github, Linkedin, Mail, Link2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { data } from '../../data/portfolioData'
 import { useInView } from '../../hooks/useInView'
+
+// ─── EmailJS config ────────────────────────────────────────────────────────────
+const EMAILJS_SERVICE_ID  = 'service_bqt8w08'
+const EMAILJS_TEMPLATE_ID = 'template_REPLACE_ME'   // ← paste your Template ID here
+const EMAILJS_PUBLIC_KEY  = '4rUveCj_R5trgus_F'
 
 const socialCards = [
   { Icon: Github,   label: 'GitHub',    sub: 'github.com/ParthSamarth', sub2: '5+ repositories', href: 'https://github.com/ParthSamarth', external: true },
@@ -17,7 +23,8 @@ const Contact = React.memo(function Contact() {
   const [ref, inView] = useInView()
   const [copied, setCopied] = useState(false)
   const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState('idle') // 'idle' | 'sending' | 'success' | 'error'
+  const formRef = useRef(null)
 
   const handleCopy = () => {
     navigator.clipboard.writeText(data.personal.email)
@@ -25,9 +32,29 @@ const Contact = React.memo(function Contact() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return
+    setStatus('sending')
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name:    form.name,
+          from_email:   form.email,
+          message:      form.message,
+          to_name:      'Parth',
+          reply_to:     form.email,
+        },
+        EMAILJS_PUBLIC_KEY
+      )
+      setStatus('success')
+      setForm({ name: '', email: '', message: '' })
+    } catch (err) {
+      console.error('EmailJS error:', err)
+      setStatus('error')
+    }
   }
 
   return (
@@ -153,19 +180,36 @@ const Contact = React.memo(function Contact() {
                 onBlur={e => { e.target.style.borderColor='var(--gold-border)'; e.target.style.boxShadow='none' }}
               />
             </div>
-            <button type="submit" style={{
-              width:'100%', background:'var(--gold)', color:'#0A0A0A',
-              fontFamily:'var(--font-label)', fontWeight:600, fontSize:'0.95rem', letterSpacing:'0.08em',
-              padding:'12px', borderRadius:'4px', border:'none', cursor:'pointer',
-              transition:'background 200ms, box-shadow 200ms',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background='var(--gold-bright)'; e.currentTarget.style.boxShadow='var(--shadow-gold)' }}
-              onMouseLeave={e => { e.currentTarget.style.background='var(--gold)'; e.currentTarget.style.boxShadow='none' }}
-            >SEND MESSAGE →</button>
-            {submitted && (
+            <button
+              type="submit"
+              disabled={status === 'sending' || status === 'success'}
+              style={{
+                width:'100%',
+                background: status === 'success' ? 'rgba(40,202,65,0.15)' : 'var(--gold)',
+                color: status === 'success' ? '#28CA41' : '#0A0A0A',
+                border: status === 'success' ? '1px solid #28CA41' : 'none',
+                fontFamily:'var(--font-label)', fontWeight:600, fontSize:'0.95rem', letterSpacing:'0.08em',
+                padding:'12px', borderRadius:'4px',
+                cursor: status === 'sending' || status === 'success' ? 'not-allowed' : 'pointer',
+                opacity: status === 'sending' ? 0.7 : 1,
+                transition:'background 200ms, box-shadow 200ms, color 200ms, border 200ms',
+              }}
+              onMouseEnter={e => { if (status === 'idle' || status === 'error') { e.currentTarget.style.background='var(--gold-bright)'; e.currentTarget.style.boxShadow='var(--shadow-gold)' }}}
+              onMouseLeave={e => { if (status === 'idle' || status === 'error') { e.currentTarget.style.background='var(--gold)'; e.currentTarget.style.boxShadow='none' }}}
+            >
+              {status === 'sending' ? '$ sending...' : status === 'success' ? '✓ Message Delivered' : 'SEND MESSAGE →'}
+            </button>
+            {status === 'error' && (
+              <motion.div initial={{ opacity:0,y:8 }} animate={{ opacity:1,y:0 }}
+                style={{ fontFamily:'var(--font-mono)', fontSize:'0.8rem', color:'#ff6b6b' }}>
+                $ error — could not send.{' '}
+                <button onClick={() => setStatus('idle')} style={{ background:'none', border:'none', color:'var(--gold)', cursor:'pointer', fontFamily:'var(--font-mono)', fontSize:'0.8rem' }}>retry?</button>
+              </motion.div>
+            )}
+            {status === 'success' && (
               <motion.div initial={{ opacity:0,y:8 }} animate={{ opacity:1,y:0 }}
                 style={{ fontFamily:'var(--font-mono)', fontSize:'0.8rem', color:'var(--text-code)' }}>
-                $ message --send ............... <span style={{ color:'var(--gold)' }}>✓ Delivered</span>
+                $ message --send ............... <span style={{ color:'#28CA41' }}>✓ Delivered — I'll reply within 24–48h</span>
               </motion.div>
             )}
           </form>
