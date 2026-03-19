@@ -159,7 +159,8 @@ export default function Navbar() {
         <button
           className="mobile-menu-btn"
           onClick={() => setMobileOpen(true)}
-          style={{ marginLeft: 'auto', color: 'var(--gold)', background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+          aria-label="Open menu"
+          style={{ marginLeft: 'auto', color: 'var(--gold)', background: 'none', border: 'none', cursor: 'pointer', padding: '10px', minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           <Menu size={24} />
         </button>
@@ -183,9 +184,11 @@ export default function Navbar() {
           >
             <button
               onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
               style={{
-                position: 'absolute', top: '1.25rem', right: '1.5rem',
+                position: 'absolute', top: '1rem', right: '1rem',
                 color: 'var(--gold)', background: 'none', border: 'none', cursor: 'pointer',
+                minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
               <X size={24} />
@@ -203,6 +206,7 @@ export default function Navbar() {
                   fontFamily: 'var(--font-label)', fontSize: '1.5rem',
                   color: 'var(--text)', textDecoration: 'none',
                   display: 'flex', alignItems: 'center', gap: '2px',
+                  minHeight: '44px', padding: '0 8px',
                 }}
               >
                 <span style={{ color: 'var(--gold-dim)' }}>{link.prefix}</span>
@@ -260,10 +264,12 @@ export default function Navbar() {
           0%, 100% { transform: scale(1); opacity: 1; }
           50% { transform: scale(1.8); opacity: 0; }
         }
-        @media (min-width: 769px) { .mobile-menu-btn { display: none !important; } }
-        @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
+        /* Collapse to hamburger below 640px */
+        @media (min-width: 641px) { .mobile-menu-btn { display: none !important; } }
+        @media (max-width: 640px) {
+          .desktop-nav   { display: none !important; }
           .desktop-right { display: none !important; }
+          nav { overflow-x: hidden; }
         }
       `}</style>
     </>
